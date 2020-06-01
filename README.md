@@ -13,11 +13,12 @@ Giraffe's board evaluation at a time t and its own evaluation of the board n ste
 By doing this, we hope that the network keeps temporal consistency on the evaluation of the board. 
 
 ## How to use:
-__Warning__: All the scripts use all your CPU cores by default, to change this simply set the N_PROC variable of each script
+__Warning__: All the scripts use all your CPU cores by default, to change this simply set the __N_PROC__ variable of each script
 to the number of cores you want to actually use
 ### Build Stockfish database
-A Stockfish database is already available in data/csv. If you want to extend it you can run data_preparation script.
-Just make sure to set max_game parameter (the number of games you want to learn from) to the value you desire
+A Stockfish database is expected in the path __data/csv__. If you want to create it you can run __data_preparation__ script.
+Just make sure to set the __max_game__ parameter (the number of games you want to learn from) to the value you desire.
+__Note__: The data_preparation script expects pgn file in the path __data/pgn__. These files can be downloaded from [KingBase 2018](https://archive.org/details/KingBase2018) & [KingBase 2019](https://archive.org/details/KingBase2019)
 ### Learn from Stockfish
 Use stockfish_training.py script. This will learn from the Stockfish database you have built and store the model
 in the model directory
@@ -27,72 +28,29 @@ Use td_leaf_learning.py script. This is currently in progress
 You can visualize a game between two neural networks in the minimax.py script
 
 ## Expected folder structure
-├── board_encoding.py
-├── data
-│   ├── csv
-│   │   ├── KingBase2018-A00-A39.csv
-│   │   ├── KingBase2018-A40-A79.csv
-│   │   ├── KingBase2018-C00-C19.csv
-│   │   ├── KingBase2018-D00-D29.csv
-│   │   ├── KingBase2018-D70-D99.csv
-│   │   ├── KingBase2018-E00-E19.csv
-│   │   ├── KingBase2018-E20-E59.csv
-│   │   ├── KingBase2019-A40-A79.csv
-│   │   ├── KingBase2019-B20-B49.csv
-│   │   ├── KingBase2019-B50-B99.csv
-│   │   ├── KingBase2019-C00-C19.csv
-│   │   ├── KingBase2019-C60-C99.csv
-│   │   ├── KingBase2019-D00-D29.csv
-│   │   ├── KingBase2019-D30-D69.csv
-│   │   ├── KingBase2019-D70-D99.csv
-│   │   ├── KingBase2019-E00-E19.csv
-│   │   ├── test.csv
-│   │   └── train.csv
-│   └── pgn
-│       ├── KingBase2018-A00-A39.pgn
-│       ├── KingBase2018-A40-A79.pgn
-│       ├── KingBase2018-A80-A99.pgn
-│       ├── KingBase2018-B00-B19.pgn
-│       ├── KingBase2018-B20-B49.pgn
-│       ├── KingBase2018-B50-B99.pgn
-│       ├── KingBase2018-C00-C19.pgn
-│       ├── KingBase2018-C20-C59.pgn
-│       ├── KingBase2018-C60-C99.pgn
-│       ├── KingBase2018-D00-D29.pgn
-│       ├── KingBase2018-D30-D69.pgn
-│       ├── KingBase2018-D70-D99.pgn
-│       ├── KingBase2018-E00-E19.pgn
-│       ├── KingBase2018-E20-E59.pgn
-│       ├── KingBase2018-E60-E99.pgn
-│       ├── KingBase2018-pgn.zip
-│       ├── KingBase2019-A00-A39.pgn
-│       ├── KingBase2019-A40-A79.pgn
-│       ├── KingBase2019-A80-A99.pgn
-│       ├── KingBase2019-B00-B19.pgn
-│       ├── KingBase2019-B20-B49.pgn
-│       ├── KingBase2019-B50-B99.pgn
-│       ├── KingBase2019-C00-C19.pgn
-│       ├── KingBase2019-C20-C59.pgn
-│       ├── KingBase2019-C60-C99.pgn
-│       ├── KingBase2019-D00-D29.pgn
-│       ├── KingBase2019-D30-D69.pgn
-│       ├── KingBase2019-D70-D99.pgn
-│       ├── KingBase2019-E00-E19.pgn
-│       ├── KingBase2019-E20-E59.pgn
-│       ├── KingBase2019-E60-E99.pgn
-│       └── KingBase2019-pgn.zip
-├── data_preparation.py
-├── docs
-│   ├── giraffe.pdf
-│   └── td_leaf.pdf
-├── GiraffeNet.py
-├── minimax.py
-├── model
-│   ├── giraffe_net_td_07.pt
-│   ├── stockfish_net_4.pt
-│   ├── stockfish_net_5.pt
-│   └── stockfish_net.pt
-├── README.md
-├── stockfish_testing.py
-├── stockfish_training.py
+├── board_encoding.py__
+├── data__
+│   ├── csv__
+│   │   ├── KingBase2018-A00-A39.csv__
+│   │   ├── ...__
+│   │   ├── test.csv__
+│   │   └── train.csv__
+│   └── pgn__
+│       ├── KingBase2018-A00-A39.pgn__
+│       ├── ...__
+│       └── KingBase2019-A00-A39.pgn__
+├── data_preparation.py__
+├── docs__
+│   ├── giraffe.pdf__
+│   └── td_leaf.pdf__
+├── GiraffeNet.py__
+├── minimax.py__
+├── model__
+│   ├── giraffe_net_td_07.pt__
+│   ├── stockfish_net_4.pt__
+│   ├── stockfish_net_5.pt__
+│   └── stockfish_net.pt__
+├── README.md__
+├── stockfish_testing.py__
+├── stockfish_training.py__
 └── td_leaf_training.py
