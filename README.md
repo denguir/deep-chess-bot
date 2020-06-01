@@ -28,29 +28,29 @@ Use td_leaf_learning.py script. This is currently in progress
 You can visualize a game between two neural networks in the minimax.py script
 
 ## Expected folder structure
-├── board_encoding.py__
-├── data__
-│   ├── csv__
-│   │   ├── KingBase2018-A00-A39.csv__
-│   │   ├── ...__
-│   │   ├── test.csv__
-│   │   └── train.csv__
-│   └── pgn__
-│       ├── KingBase2018-A00-A39.pgn__
-│       ├── ...__
-│       └── KingBase2019-A00-A39.pgn__
-├── data_preparation.py__
-├── docs__
-│   ├── giraffe.pdf__
-│   └── td_leaf.pdf__
-├── GiraffeNet.py__
-├── minimax.py__
-├── model__
-│   ├── giraffe_net_td_07.pt__
-│   ├── stockfish_net_4.pt__
-│   ├── stockfish_net_5.pt__
-│   └── stockfish_net.pt__
-├── README.md__
-├── stockfish_testing.py__
-├── stockfish_training.py__
+├── board_encoding.py  
+├── data  
+│   ├── csv  
+│   │   ├── KingBase2018-A00-A39.csv  
+│   │   ├── ...  
+│   │   ├── test.csv  
+│   │   └── train.csv  
+│   └── pgn  
+│       ├── KingBase2018-A00-A39.pgn  
+│       ├── ...  
+│       └── KingBase2019-A00-A39.pgn  
+├── data_preparation.py  
+├── docs  
+│   ├── giraffe.pdf  
+│   └── td_leaf.pdf  
+├── GiraffeNet.py  
+├── minimax.py  
+├── model  
+│   ├── giraffe_net_td_07.pt  
+│   ├── stockfish_net_4.pt  
+│   ├── stockfish_net_5.pt  
+│   └── stockfish_net.pt  
+├── README.md  
+├── stockfish_testing.py  
+├── stockfish_training.py  
 └── td_leaf_training.py
