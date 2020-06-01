@@ -25,3 +25,74 @@ in the model directory
 Use td_leaf_learning.py script. This is currently in progress
 ### Play actual game
 You can visualize a game between two neural networks in the minimax.py script
+
+## Expected folder structure
+├── board_encoding.py
+├── data
+│   ├── csv
+│   │   ├── KingBase2018-A00-A39.csv
+│   │   ├── KingBase2018-A40-A79.csv
+│   │   ├── KingBase2018-C00-C19.csv
+│   │   ├── KingBase2018-D00-D29.csv
+│   │   ├── KingBase2018-D70-D99.csv
+│   │   ├── KingBase2018-E00-E19.csv
+│   │   ├── KingBase2018-E20-E59.csv
+│   │   ├── KingBase2019-A40-A79.csv
+│   │   ├── KingBase2019-B20-B49.csv
+│   │   ├── KingBase2019-B50-B99.csv
+│   │   ├── KingBase2019-C00-C19.csv
+│   │   ├── KingBase2019-C60-C99.csv
+│   │   ├── KingBase2019-D00-D29.csv
+│   │   ├── KingBase2019-D30-D69.csv
+│   │   ├── KingBase2019-D70-D99.csv
+│   │   ├── KingBase2019-E00-E19.csv
+│   │   ├── test.csv
+│   │   └── train.csv
+│   └── pgn
+│       ├── KingBase2018-A00-A39.pgn
+│       ├── KingBase2018-A40-A79.pgn
+│       ├── KingBase2018-A80-A99.pgn
+│       ├── KingBase2018-B00-B19.pgn
+│       ├── KingBase2018-B20-B49.pgn
+│       ├── KingBase2018-B50-B99.pgn
+│       ├── KingBase2018-C00-C19.pgn
+│       ├── KingBase2018-C20-C59.pgn
+│       ├── KingBase2018-C60-C99.pgn
+│       ├── KingBase2018-D00-D29.pgn
+│       ├── KingBase2018-D30-D69.pgn
+│       ├── KingBase2018-D70-D99.pgn
+│       ├── KingBase2018-E00-E19.pgn
+│       ├── KingBase2018-E20-E59.pgn
+│       ├── KingBase2018-E60-E99.pgn
+│       ├── KingBase2018-pgn.zip
+│       ├── KingBase2019-A00-A39.pgn
+│       ├── KingBase2019-A40-A79.pgn
+│       ├── KingBase2019-A80-A99.pgn
+│       ├── KingBase2019-B00-B19.pgn
+│       ├── KingBase2019-B20-B49.pgn
+│       ├── KingBase2019-B50-B99.pgn
+│       ├── KingBase2019-C00-C19.pgn
+│       ├── KingBase2019-C20-C59.pgn
+│       ├── KingBase2019-C60-C99.pgn
+│       ├── KingBase2019-D00-D29.pgn
+│       ├── KingBase2019-D30-D69.pgn
+│       ├── KingBase2019-D70-D99.pgn
+│       ├── KingBase2019-E00-E19.pgn
+│       ├── KingBase2019-E20-E59.pgn
+│       ├── KingBase2019-E60-E99.pgn
+│       └── KingBase2019-pgn.zip
+├── data_preparation.py
+├── docs
+│   ├── giraffe.pdf
+│   └── td_leaf.pdf
+├── GiraffeNet.py
+├── minimax.py
+├── model
+│   ├── giraffe_net_td_07.pt
+│   ├── stockfish_net_4.pt
+│   ├── stockfish_net_5.pt
+│   └── stockfish_net.pt
+├── README.md
+├── stockfish_testing.py
+├── stockfish_training.py
+└── td_leaf_training.py
