@@ -3,7 +3,7 @@ This is a bot that learns chess in two steps:
 
 ## Supervised learning
 The first step focuses on learning from a Stockfish engine how to evaluate a chess board.
-To do this, we downloaded a chess database ([KingBase 2018] (https://archive.org/details/KingBase2018) & [KingBase 2019] (https://archive.org/details/KingBase2019)) containing games of GM players that we evaluated with Stockfish. Then, we designed a neural network similar to Giraffe (see docs: giraffe) which has been trained to score similarly as the Stockfish engine
+To do this, we downloaded a chess database ([KingBase 2018](https://archive.org/details/KingBase2018) & [KingBase 2019](https://archive.org/details/KingBase2019)) containing games of GM players that we evaluated with Stockfish. Then, we designed a neural network similar to Giraffe (see docs: giraffe) which has been trained to score similarly as the Stockfish engine
 
 
 ## Reinforcement learning (ongoing)
