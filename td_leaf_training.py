@@ -145,16 +145,3 @@ if __name__ == '__main__':
 
                 print(f"Saving model to {model_name}")
                 torch.save(giraffe_net.state_dict(), model_name)
-
-
-
-def err_tot(scores):
-    t = 0
-    discount = 1
-    err_t = 0
-    for j in range(t, - len(scores) - 1):
-        dj = scores[j+1] - scores[j]
-        err_t += (discount * dj)
-        discount *= 0.7
-        print(err_t)
-    return err_t
