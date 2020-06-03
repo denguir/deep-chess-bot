@@ -189,7 +189,7 @@ if __name__ == '__main__':
     stockfish_net.eval()
 
     # Loading saved weights
-    white_model_name = 'model/giraffe_net_td_07.pt'
+    white_model_name = 'model/giraffe_net_td_6steps.pt'
     black_model_name = 'model/stockfish_net_4.pt'
     try:
         print(f'Loading white model from {white_model_name}.')

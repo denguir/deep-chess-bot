@@ -54,23 +54,35 @@ def td_loss(scores, td_lamdba):
     scores = torch.Tensor(scores)
     L, N = scores.size()
     err = torch.zeros((L, N))
-    for t in range(1, N):
+    for t in range(N-1):
         discount = 1
         err_t = torch.zeros(L)
-        for j in range(t, N):
-            dj = scores[:, j] - scores[:, j-1]
-            err_t += discount * dj
+        for j in range(t, N-1):
+            dj = scores[:, j+1] - scores[:, j]
             discount *= td_lamdba
-        err[:, t-1] = err_t
+            err_t += discount * dj
+        err[:, t] = err_t
     # we include a minus sign because torch computes a gradient descent
     # by default, but we want to impose a custom update rule for the weights
     loss = torch.mean(torch.sum(-scores * err.detach(), dim=1))
     return loss
 
 
+def n_steps_td_loss(scores, n_steps):
+    # better use an even number for n_steps
+    scores = torch.Tensor(scores)
+    L, N = scores.size()
+    err = torch.zeros((L, N - n_steps))
+    for t in range(N - n_steps):
+        err[:, t] = torch.abs(scores[:, t] - scores[:, t + n_steps]) # L1-loss
+    loss = torch.mean(err)
+    return loss
+
+
 def self_learn(batch, net, device, n_moves, optimizer):
     scores = self_play(batch, net, device, n_moves)
     loss = td_loss(scores, 0.7)
+    #loss = n_steps_td_loss(scores, 6)
     with multiprocessing.Lock():
         optimizer.zero_grad()
         loss.backward()
@@ -87,7 +99,7 @@ if __name__ == '__main__':
     giraffe_net.to(device).float()
 
     # Loading saved weights
-    model_name = 'model/giraffe_net_td_07.pt'
+    model_name = 'model/giraffe_net_td_lambda_07.pt'
     try:
         print(f'Loading model from {model_name}.')
         giraffe_net.load_state_dict(torch.load(model_name))
@@ -133,3 +145,16 @@ if __name__ == '__main__':
 
                 print(f"Saving model to {model_name}")
                 torch.save(giraffe_net.state_dict(), model_name)
+
+
+
+def err_tot(scores):
+    t = 0
+    discount = 1
+    err_t = 0
+    for j in range(t, - len(scores) - 1):
+        dj = scores[j+1] - scores[j]
+        err_t += (discount * dj)
+        discount *= 0.7
+        print(err_t)
+    return err_t
