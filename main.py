@@ -7,9 +7,10 @@ from functools import partial
 
 
 def naive_evaluation(board):
-    # Naive evaluation function
-    # Uppercase: white pieces
-    # Lowercase: black pieces
+    '''Naive evaluation function
+    - Uppercase: white pieces
+    - Lowercase: black pieces
+    '''
     value_map = {'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 0,
                  'p':-1, 'n':-3, 'b':-3, 'r':-5, 'q':-9, 'k': 0}
     val = 0
@@ -36,32 +37,17 @@ def giraffe_evaluation(board, net, device):
     return torch.squeeze(val)
 
 
-def minimax(board, depth, max_depth, color, evaluator):
+def alpha_beta(board, depth, color, alpha, beta, evaluator):
     '''
-    Depth limited minimax tree search
-    depth: current depth 
-    max_depth: number of recursion before jumping into evaluation function
-    color: True (White), False (Black)
-    White is the max player (wants to maximize score)
-    Black is the min player (wants to minimize score)
+    Depth limited minimax tree search with alpha-beta pruning
+    - depth: number of recursion before jumping into evaluation function
+    - color: True (White), False (Black)
+    - White is the max player (wants to maximize score)
+    - Black is the min player (wants to minimize score)
     '''
     max_score = 10000.0
 
-    if board.is_game_over():
-        if board.is_checkmate():
-            # if white to play, black won
-            if color:
-                # add depth to choose faster win strategy
-                return -(max_score + depth)/max_score
-            # if black to play, white won
-            else:
-                # substract depth to choose faster win strategy
-                return (max_score - depth)/max_score
-        else:
-            # draw
-            return 0
-
-    if depth == max_depth:
+    if board.is_game_over() or depth == 0:
         return evaluator(board)
     
     if color:
@@ -69,10 +55,13 @@ def minimax(board, depth, max_depth, color, evaluator):
         for move in board.legal_moves:
             # make a move
             board.push(move)
-            # call minimax recusively and choose max value
-            best_score = max(best_score, minimax(board, depth+1, max_depth, board.turn, evaluator))
+            # call alpha_beta recusively and choose max value
+            best_score = max(best_score, alpha_beta(board, depth-1, board.turn, alpha, beta, evaluator))
+            alpha = max(alpha, best_score)
             # undo move
             board.pop()
+            if alpha >= beta:
+                break
         return best_score
     
     else:
@@ -80,64 +69,13 @@ def minimax(board, depth, max_depth, color, evaluator):
         for move in board.legal_moves:
             # make a move
             board.push(move)
-            # call minimax recusively and choose max value
-            best_score = min(best_score, minimax(board, depth+1, max_depth, board.turn, evaluator))
+            # call alpha_beta recusively and choose min value
+            best_score = min(best_score, alpha_beta(board, depth-1, board.turn, alpha, beta, evaluator))
+            beta = min(beta, best_score)
             # undo move
             board.pop()
-        return best_score
-
-
-def probabilistic_minimax(board, proba_depth, min_proba_depth, color, evaluator):
-    '''
-    Probability-Limited Search:
-    probabilistic_minimax will favor tree searches on branches with less sub branches
-    as an exploration probability is distributed evenly at each sub-branches
-    
-    proba_depth: current depth in terms of probability
-    min_proba_depth: threshold from which the search stops and the evaluation is triggered
-    color: True (White), False (Black)
-    White is the max player (wants to maximize score)
-    Black is the min player (wants to minimize score)
-    '''
-    max_score = 10000.0
-
-    if board.is_game_over():
-        if board.is_checkmate():
-            # if white to play, black won
-            if color:
-                return -max_score/max_score
-            # if black to play, white won
-            else:
-                return max_score/max_score
-        else:
-            # draw
-            return 0
-
-    if proba_depth < min_proba_depth:
-        return evaluator(board)
-    
-    if color:
-        best_score = -max_score
-        num_moves = len(list(board.legal_moves))
-        for move in board.legal_moves:
-            # make a move
-            board.push(move)
-            # call minimax recusively and choose max value
-            best_score = max(best_score, probabilistic_minimax(board, proba_depth/num_moves, min_proba_depth, board.turn, evaluator))
-            # undo move
-            board.pop()
-        return best_score
-    
-    else:
-        best_score = max_score
-        num_moves = len(list(board.legal_moves))
-        for move in board.legal_moves:
-            # make a move
-            board.push(move)
-            # call minimax recusively and choose max value
-            best_score = min(best_score, probabilistic_minimax(board, proba_depth/num_moves, min_proba_depth, board.turn, evaluator))
-            # undo move
-            board.pop()
+            if beta <= alpha:
+                break
         return best_score
             
 
@@ -154,7 +92,7 @@ def find_best_move(board, max_depth, evaluator):
             # make a move
             board.push(move)
             # evaluate this move
-            score = minimax(board, 0, max_depth, board.turn, evaluator)
+            score = alpha_beta(board, max_depth, board.turn, -max_score, max_score, evaluator)
             # undo move
             board.pop()
 
@@ -171,9 +109,8 @@ def find_best_move(board, max_depth, evaluator):
     else:
         best_score = best_score / max_score
     
-    if type(best_score) is not torch.Tensor:
-        best_score = torch.squeeze(torch.Tensor([best_score]))
-
+    # if type(best_score) is not torch.Tensor:
+    #     best_score = torch.squeeze(torch.Tensor([best_score]))
     return best_move, best_score
 
 
@@ -189,7 +126,7 @@ if __name__ == '__main__':
     stockfish_net.eval()
 
     # Loading saved weights
-    white_model_name = 'model/giraffe_net_td_6steps.pt'
+    white_model_name = 'model/stockfish_net_5.pt'
     black_model_name = 'model/stockfish_net_4.pt'
     try:
         print(f'Loading white model from {white_model_name}.')

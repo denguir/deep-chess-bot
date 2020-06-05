@@ -51,7 +51,6 @@ def self_play(batch, net, device, n_moves):
 
 
 def td_loss(scores, td_lamdba):
-    scores = torch.Tensor(scores)
     L, N = scores.size()
     err = torch.zeros((L, N))
     for t in range(N-1):
@@ -70,19 +69,16 @@ def td_loss(scores, td_lamdba):
 
 def n_steps_td_loss(scores, n_steps):
     # better use an even number for n_steps
-    scores = torch.Tensor(scores)
-    L, N = scores.size()
-    err = torch.zeros((L, N - n_steps))
-    for t in range(N - n_steps):
-        err[:, t] = torch.abs(scores[:, t] - scores[:, t + n_steps]) # L1-loss
-    loss = torch.mean(err)
+    _, N = scores.size()
+    criterion = nn.L1Loss()
+    loss = criterion(scores[:, :N-n_steps], scores[:, n_steps:].detach())
     return loss
 
 
 def self_learn(batch, net, device, n_moves, optimizer):
     scores = self_play(batch, net, device, n_moves)
-    loss = td_loss(scores, 0.7)
-    #loss = n_steps_td_loss(scores, 6)
+    #loss = td_loss(scores, 0.7)
+    loss = n_steps_td_loss(scores, 6)
     with multiprocessing.Lock():
         optimizer.zero_grad()
         loss.backward()
@@ -99,7 +95,7 @@ if __name__ == '__main__':
     giraffe_net.to(device).float()
 
     # Loading saved weights
-    model_name = 'model/giraffe_net_td_lambda_07.pt'
+    model_name = 'model/giraffe_net_td_6_steps.pt'
     try:
         print(f'Loading model from {model_name}.')
         giraffe_net.load_state_dict(torch.load(model_name))
