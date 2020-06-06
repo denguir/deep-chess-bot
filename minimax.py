@@ -13,7 +13,7 @@ def naive_evaluation(board):
     '''
     value_map = {'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 0,
                  'p':-1, 'n':-3, 'b':-3, 'r':-5, 'q':-9, 'k': 0}
-    val = 0
+    val = 0.0
     val_max = 22.0
     # evaluate board by counting living pieces in both sides
     for char in board.board_fen():
@@ -21,9 +21,9 @@ def naive_evaluation(board):
             val += value_map[char]
     # attribute some points if side has castling rights
     if board.has_castling_rights(True):
-        val += 1
+        val += 1.0
     if board.has_castling_rights(False):
-        val -= 1
+        val -= 1.0
     return val/val_max
 
 
@@ -47,7 +47,19 @@ def alpha_beta(board, depth, color, alpha, beta, evaluator):
     '''
     max_score = 10000.0
 
-    if board.is_game_over() or depth == 0:
+    if board.is_game_over():
+        if board.is_checkmate():
+            # if white to play, black won
+            if color:
+                return -1.0
+            # if black to play, white won
+            else:
+                return 1.0
+        else:
+            # draw
+            return 0.0
+
+    if depth == 0:
         return evaluator(board)
     
     if color:
@@ -109,8 +121,8 @@ def find_best_move(board, max_depth, evaluator):
     else:
         best_score = best_score / max_score
     
-    # if type(best_score) is not torch.Tensor:
-    #     best_score = torch.squeeze(torch.Tensor([best_score]))
+    if type(best_score) is float:
+        best_score = torch.squeeze(torch.Tensor([best_score]))
     return best_move, best_score
 
 
@@ -126,8 +138,8 @@ if __name__ == '__main__':
     stockfish_net.eval()
 
     # Loading saved weights
-    white_model_name = 'model/stockfish_net_5.pt'
-    black_model_name = 'model/stockfish_net_4.pt'
+    white_model_name = 'model/giraffe_net_td_lambda_07.pt'
+    black_model_name = 'model/stockfish_net_5.pt'
     try:
         print(f'Loading white model from {white_model_name}.')
         giraffe_net.load_state_dict(torch.load(white_model_name))

@@ -17,7 +17,7 @@ import random
 
 # Training parameters
 EPOCHS = 1
-BATCH_SIZE = 256 # 256x16
+BATCH_SIZE = 256 
 N_PROC = multiprocessing.cpu_count()
 
 
@@ -77,8 +77,8 @@ def n_steps_td_loss(scores, n_steps):
 
 def self_learn(batch, net, device, n_moves, optimizer):
     scores = self_play(batch, net, device, n_moves)
-    #loss = td_loss(scores, 0.7)
-    loss = n_steps_td_loss(scores, 6)
+    loss = td_loss(scores, 0.7)
+    # loss = n_steps_td_loss(scores, 6)
     with multiprocessing.Lock():
         optimizer.zero_grad()
         loss.backward()
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     giraffe_net.to(device).float()
 
     # Loading saved weights
-    model_name = 'model/giraffe_net_td_6_steps.pt'
+    model_name = 'model/giraffe_net_td_lambda_07.pt'
     try:
         print(f'Loading model from {model_name}.')
         giraffe_net.load_state_dict(torch.load(model_name))
