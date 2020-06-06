@@ -62,6 +62,7 @@ def self_play_mc(batch, net, device, td_lambda):
     loss = torch.mean(err)
     return loss
 
+
 def self_play(batch, net, device, n_moves):
     '''Self play on n_moves of a given game'''
     boards = [chess.Board(b) for b in batch['board']]
@@ -167,6 +168,6 @@ if __name__ == '__main__':
             if i % 50 == 49:
                 print(f"Epoch {epoch+1}, iter {i+1} \t train_loss: {running_loss/(13)}")
                 running_loss = 0.0
-                
+
                 print(f"Saving model to {model_name}")
                 torch.save(giraffe_net.state_dict(), model_name)
