@@ -35,7 +35,35 @@ def push_random_move(board):
     return board
 
 
+def self_play_mc(batch, net, device, td_lambda):
+    '''Self play on entire game'''
+    boards = [chess.Board(b) for b in batch['board']]
+    boards = list(map(push_random_move, boards))
+    giraffe_move = partial(find_best_move, max_depth=0, 
+                                evaluator=partial(giraffe_evaluation, net=net, device=device))
+    err = torch.zeros(len(boards))
+    for b, board in enumerate(boards):
+        scores_board = []
+        while not board.is_game_over():
+            move, score = giraffe_move(board)
+            scores_board.append(score)
+            board.push(move)
+        # when game is over, the score is the winner (1, -1, or 0)
+        _, score = giraffe_move(board)
+        scores_board.append(score)
+        for t in range(len(scores_board)-1):
+            discount = 1
+            err_t = 0
+            for j in range(t, len(scores_board)-1):
+                dj = scores_board[j+1] - scores_board[j]
+                discount *= td_lambda
+                err_t += discount * dj
+            err[b] -= scores_board[t] * err_t.detach()
+    loss = torch.mean(err)
+    return loss
+
 def self_play(batch, net, device, n_moves):
+    '''Self play on n_moves of a given game'''
     boards = [chess.Board(b) for b in batch['board']]
     boards = list(map(push_random_move, boards))
     giraffe_move = partial(find_best_move, max_depth=0, 
@@ -76,6 +104,7 @@ def n_steps_td_loss(scores, n_steps):
 
 
 def self_learn(batch, net, device, n_moves, optimizer):
+    #loss = self_play_mc(batch, net, device, 0.7)
     scores = self_play(batch, net, device, n_moves)
     loss = td_loss(scores, 0.7)
     # loss = n_steps_td_loss(scores, 6)
@@ -136,8 +165,8 @@ if __name__ == '__main__':
             running_loss += reduce(lambda x,y: x+y, losses) / N_PROC
 
             if i % 50 == 49:
-                print(f"Epoch {epoch+1}, iter {i+1} \t train_loss: {running_loss/(50)}")
+                print(f"Epoch {epoch+1}, iter {i+1} \t train_loss: {running_loss/(13)}")
                 running_loss = 0.0
-
+                
                 print(f"Saving model to {model_name}")
                 torch.save(giraffe_net.state_dict(), model_name)

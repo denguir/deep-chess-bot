@@ -99,7 +99,13 @@ def find_best_move(board, max_depth, evaluator):
     else:
         best_score = max_score
     
-    if len(list(board.legal_moves)) > 0:
+    if board.is_game_over():
+        if board.is_checkmate():
+            best_score = best_score / max_score
+        else:
+            # draw
+            best_score = 0.0
+    else:
         for move in board.legal_moves:
             # make a move
             board.push(move)
@@ -118,8 +124,6 @@ def find_best_move(board, max_depth, evaluator):
                 if score < best_score:
                     best_score = score
                     best_move = move
-    else:
-        best_score = best_score / max_score
     
     if type(best_score) is float:
         best_score = torch.squeeze(torch.Tensor([best_score]))
