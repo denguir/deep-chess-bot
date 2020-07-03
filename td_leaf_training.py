@@ -166,7 +166,7 @@ if __name__ == '__main__':
             running_loss += reduce(lambda x,y: x+y, losses) / N_PROC
 
             if i % 50 == 49:
-                print(f"Epoch {epoch+1}, iter {i+1} \t train_loss: {running_loss/(13)}")
+                print(f"Epoch {epoch+1}, iter {i+1} \t train_loss: {running_loss/(50)}")
                 running_loss = 0.0
 
                 print(f"Saving model to {model_name}")
